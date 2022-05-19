@@ -1,0 +1,79 @@
+S2960//代码
+en
+conf t
+hostname S2960
+vlan 10
+vlan 20
+ex
+int f0/10
+switch access vlan 10
+int f0/20
+switch access vlan 20
+int f0/24
+switch mode trunk
+ex
+int vlan1
+ip add 192.168.0.254 255.255.255.0
+no shutdown
+ip default-gateway 192.168.0.2
+end
+
+S3560//代码
+en
+conf t
+hostname S3560
+ip routing
+vlan 10
+vlan 20
+vlan 30
+ex
+int f0/10
+switch access vlan 30
+int f0/24
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ex
+interface Vlan1
+ip address 192.168.0.2 255.255.255.0
+shutdown
+interface Vlan10
+ip address 192.168.10.1 255.255.255.0
+interface Vlan20
+ip address 192.168.20.1 255.255.255.0
+interface Vlan30
+ip address 192.168.30.1 255.255.255.0
+ex
+ip dhcp pool vlan10
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 202.103.224.68
+ip dhcp pool vlan20
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 202.103.224.68
+ex
+ip route 0.0.0.0 0.0.0.0 192.168.0.1
+
+
+S2811//代码
+en
+conf t
+hostname S2811
+interface FastEthernet0/0
+ ip address 192.168.0.1 255.255.255.0
+interface Serial0/0/0
+ ip address 192.168.12.200 255.255.255.0
+ clock rate 64000
+ex
+ip route 0.0.0.0 0.0.0.0 192.168.12.1 
+ip route 192.168.10.0 255.255.255.0 192.168.0.2 
+ip route 192.168.20.0 255.255.255.0 192.168.0.2 
+ip route 192.168.30.0 255.255.255.0 192.168.0.2 
+
+ISP//代码
+en
+conf t
+interface FastEthernet0/0
+ ip address 202.103.224.1 255.255.255.0
+interface Serial0/0/0
+ ip address 192.168.12.1 255.255.255.0
